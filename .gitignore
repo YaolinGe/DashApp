@@ -1,0 +1,11 @@
+# Ignore the practice folder
+/practice/
+
+# Ignore Python byte-compiled files
+__pycache__/
+*.pyc
+
+# Ignore other automatically generated files (add as needed)
+# Example: .log files, .temp files, etc.
+*.log
+*.temp
