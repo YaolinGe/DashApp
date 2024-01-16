@@ -1,5 +1,24 @@
 # Python Dash Application for .cut File Visualization
 
+## Sensor Data Available
+```
+Box1Accelerometer2GRaw0
+Box1Accelerometer2GRaw1
+Box1Accelerometer2GRaw2
+Box1Accelerometer50GRaw0
+Box1Accelerometer50GRaw1
+Box2StrainRaw0
+Box2StrainRaw1
+Box3Clock
+Box1ClockPeripheral
+Box2ClockPeripheral
+Deflection
+Load
+SurfaceFinish
+Vibration
+Temperature
+```
+
 ## Overview
 This application, built using Dash in Python, visualizes data from `.cut` files processed by the `CutFileParserCLI` tool. It offers interactive data visualization capabilities, enabling users to explore and analyze the extracted data efficiently.
 
