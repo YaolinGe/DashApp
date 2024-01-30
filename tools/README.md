@@ -1,2 +1,2 @@
-# Usage 
-`CutFileParserCli.exe <filename> <sensorName>` to load a .cut file and then save all the data for the specified sensor to a .protobuf file. 
+# Usage
+`CutFileParserCli.exe <filename>` to load a .cut file and then save all the data to a temporary folder which contains all the essential sensor data. 
