@@ -9,3 +9,5 @@ __pycache__/
 # Example: .log files, .temp files, etc.
 *.log
 *.temp
+
+tools/CutFileParserCLI.exe
