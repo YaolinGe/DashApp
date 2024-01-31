@@ -12,9 +12,7 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 
-class ControlDashboard:
-
-    _fileUploaded = False
+class FileUploader:
 
     @staticmethod
     def create():
@@ -23,7 +21,7 @@ class ControlDashboard:
                 [
                     dbc.Row(
                         html.Div(
-                            "Control Dashboard",
+                            "Upload Data Files",
                             style={"fontSize": 16,
                                    "fontWeight": "bold",
                                    "text-align": "center"}
@@ -45,13 +43,17 @@ class ControlDashboard:
                                         style={"height": "100%"}
                                     ),
                                     multiple=False,
-                                    style={"border": "solid",
-                                           "borderStyle": "dashed",
-                                           "height": "10vh",
-                                           "text-align": "center",
-                                           "display": "grid",
-                                           "place-content": "center",
-                                           "fontSize": 16}
+                                    style={
+                                        "border": "solid",
+                                        "borderRadius": "50px",
+                                        "borderStyle": "dashed",
+                                        "height": "10vh",
+                                        "backgroundColor": "blue",
+                                        "text-align": "center",
+                                        "display": "grid",
+                                        "place-content": "center",
+                                        "fontSize": 16,
+                                    }
                                 )
                             )
                         ]

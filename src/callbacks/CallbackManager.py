@@ -12,7 +12,7 @@ from dash.long_callback import DiskcacheLongCallbackManager
 import diskcache
 from dash import html
 
-from pages import page1, page2, HomePage, NOF_404
+
 
 cache = diskcache.Cache("./cache")
 long_callback_manager = DiskcacheLongCallbackManager(cache)
@@ -21,17 +21,6 @@ long_callback_manager = DiskcacheLongCallbackManager(cache)
 class CallbackManager:
 
     def register_callbacks(self, app: Dash = None):
-        @app.callback(Output('page-content', 'children'),
-                  Input('url', 'pathname'))
-        def display_page(pathname):
-            if pathname == '/page1':
-                return page1.layout
-            elif pathname == '/page2':
-                return page2.layout
-            elif pathname == "/":
-                return HomePage.layout
-            else:
-                return NOF_404.layout
 
         @app.callback(
             # Output(component_id='file-uploaded-marker', component_property='style'),
