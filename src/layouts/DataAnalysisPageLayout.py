@@ -11,20 +11,15 @@ from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 from dash_bootstrap_components import Container
 
+from layouts.LayoutManager import LayoutManager
 from layouts.BaseLayout import BaseLayout
 from layouts.NavBarLayout import update_nav_bar
 
 
 class DataAnalysisPageLayout:
 
-    def __init__(self) -> None:
-        self._base_layout = BaseLayout()
-
     def layout(self) -> Container:
-        self._base_layout.create_nav_bar(update_nav_bar(activate_page="EDA"))
-        self._base_layout.create_view_port(html.Div())
-        layout = self._base_layout.update_layout()
-        return layout
+        return LayoutManager.update_page_layout(update_nav_bar(activate_page="EDA"), dbc.Container())
 
 
 if __name__ == "__main__":

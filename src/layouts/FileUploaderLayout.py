@@ -12,7 +12,7 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 
-class FileUploader:
+class FileUploaderLayout:
 
     @staticmethod
     def create():
