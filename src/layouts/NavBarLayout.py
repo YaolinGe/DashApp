@@ -1,4 +1,5 @@
 import dash_bootstrap_components as dbc
+from dash import html
 
 
 def update_nav_bar(activate_page: str = "Home"):
@@ -9,14 +10,21 @@ def update_nav_bar(activate_page: str = "Home"):
                     [
                         dbc.NavItem(
                             dbc.NavLink(
-                                children="Home",
+                                children=
+                                [
+                                    html.I(className="bi bi-house me-2"),
+                                    html.Span("Home")
+                                ],
+                                href="/",
                                 active=True if activate_page == "Home" else False,
-                                href="/"
                             )
                         ),
                         dbc.NavItem(
                             dbc.NavLink(
-                                children="EDA",
+                                children=[
+                                    html.I(className="bi bi-alarm me-2"),
+                                    html.Span("EDA")
+                                ],
                                 href="/eda",
                                 active=True if activate_page == "EDA" else False
                             )

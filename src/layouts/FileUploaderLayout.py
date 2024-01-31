@@ -27,8 +27,6 @@ class FileUploaderLayout:
                                    "text-align": "center"}
                         ),
                         align="center",
-                        style={"height": "5vh",
-                               "text-align": "center"}
                     ),
                     dbc.Row(
                         [
@@ -44,11 +42,12 @@ class FileUploaderLayout:
                                     ),
                                     multiple=False,
                                     style={
-                                        "border": "solid",
+                                        "margin": "auto",
+
+                                        # "border": "solid",
                                         "borderRadius": "50px",
-                                        "borderStyle": "dashed",
+                                        # "borderStyle": "dashed",
                                         "height": "10vh",
-                                        "backgroundColor": "blue",
                                         "text-align": "center",
                                         "display": "grid",
                                         "place-content": "center",
@@ -56,8 +55,8 @@ class FileUploaderLayout:
                                     }
                                 )
                             )
-                        ]
+                        ],
                     ),
-                ]
+                ],
             )
         )

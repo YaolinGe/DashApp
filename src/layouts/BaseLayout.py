@@ -54,12 +54,12 @@ class BaseLayout:
                         [
                             dbc.Col(
                                 self._nav_bar,
-                                width=1,
+                                width=3,
                                 style={"height": "90vh", "border": "thin lightgrey solid", "padding": "10px"}
                             ),
                             dbc.Col(
                                 self._view_port,
-                                width=11,
+                                width=7,
                                 style={"height": "90vh", "border": "thin lightgrey solid", "padding": "10px"}
                             ),
                         ]

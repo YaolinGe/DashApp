@@ -1,5 +1,5 @@
 from dash import Dash, Output, Input
-from pages import HomePage, DataAnalysisPage, NOF_404
+from pages import HomePage, DataAnalysisPage, NF404Page
 
 
 class NavBarCallbackManager:
@@ -13,7 +13,7 @@ class NavBarCallbackManager:
             elif pathname == '/eda':
                 return DataAnalysisPage.layout
             else:
-                return NOF_404.layout
+                return NF404Page.layout
 
 
 if __name__ == "__main__":
