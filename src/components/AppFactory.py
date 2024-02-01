@@ -5,6 +5,10 @@ This module creates the Dash App.
 from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 
+from callbacks.CutFileParserCallbackManager import CutFileParserCallbackManager
+from callbacks.NavBarCallbackManager import NavBarCallbackManager
+from callbacks.ReviewPageCallbackManager import ReviewPageCallbackManager
+
 
 def create_app(name=__name__):
     external_stylesheets = [
@@ -18,5 +22,15 @@ def create_app(name=__name__):
         dcc.Location(id='url', refresh=False),
         html.Div(id='page-content')
     ])
+
+    # Register all essential callbacks
+    nav_bar_callback_manager = NavBarCallbackManager()
+    nav_bar_callback_manager.register_callbacks(app=app)
+
+    callback_manager = CutFileParserCallbackManager()
+    callback_manager.register_callbacks(app=app)
+
+    review_page_callback_manager = ReviewPageCallbackManager()
+    review_page_callback_manager.register_callbacks(app=app)
 
     return app

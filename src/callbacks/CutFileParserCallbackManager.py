@@ -6,25 +6,24 @@ import base64
 import subprocess
 import tempfile
 
-from dash import Dash, callback, Output, Input, State
+from dash import Dash, Output, Input, State
 from dash.exceptions import PreventUpdate
 from dash.long_callback import DiskcacheLongCallbackManager
 import diskcache
 from dash import html
 
 
-
 cache = diskcache.Cache("./cache")
 long_callback_manager = DiskcacheLongCallbackManager(cache)
 
 
-class CallbackManager:
+class CutFileParserCallbackManager:
 
     def register_callbacks(self, app: Dash = None):
 
         @app.callback(
-            # Output(component_id='file-uploaded-marker', component_property='style'),
-            Output(component_id='output', component_property='children'),
+            [Output(component_id='output', component_property='children'),
+             Output(component_id='upload-div', component_property='style')],
             Input(component_id='datafiles', component_property='contents'),
             State(component_id='datafiles', component_property='filename'),
             running=[
@@ -56,12 +55,26 @@ class CallbackManager:
         finally:
             os.remove(tmp_filename)
 
-        return html.Div([html.H5(f"Filename: {filename}"), html.Pre(result.stdout if result.stdout else "No output")])
+        try:
+            # Your file processing logic here...
+            new_style = {"padding": "10px", "border": "thin lightgrey solid", "height": "35vh",
+                         "text-align": "center", "margin": "auto", "display": "flex",
+                         "justifyContent": "center", "alignItems": "center",
+                         "backgroundColor": "green", "overflow": "auto"}  # Change backgroundColor to green
+            return html.Div([html.H5(f"Filename: {filename}"), html.Pre("File processed successfully!"),
+                             html.Pre(result.stdout if result.stdout else "No output")]), new_style
+        except Exception as e:
+            # If an error occurs, keep the original style but change the content
+            original_style = {"padding": "10px", "border": "thin lightgrey solid", "height": "35vh",
+                              "text-align": "center", "margin": "auto", "display": "flex",
+                              "justifyContent": "center", "alignItems": "center",
+                              "backgroundColor": "lightYellow", "overflow": "auto"}
+            return html.Div([html.H5("Error in processing file")]), original_style
 
 
 # Usage
 if __name__ == "__main__":
     app = Dash(__name__)
-    callback_manager = CallbackManager()
+    callback_manager = CutFileParserCallbackManager()
     callback_manager.register_callbacks(app=app)
     # Additional setup and running the app

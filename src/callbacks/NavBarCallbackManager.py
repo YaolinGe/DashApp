@@ -1,5 +1,5 @@
 from dash import Dash, Output, Input
-from pages import HomePage, DataAnalysisPage, NF404Page
+from pages import HomePage, ReviewPage, NF404Page, FFTPage
 
 
 class NavBarCallbackManager:
@@ -10,8 +10,10 @@ class NavBarCallbackManager:
         def register_page(pathname):
             if pathname == '/':
                 return HomePage.layout
-            elif pathname == '/eda':
-                return DataAnalysisPage.layout
+            elif pathname == '/review':
+                return ReviewPage.layout
+            elif pathname == '/fft':
+                return FFTPage.layout
             else:
                 return NF404Page.layout
 

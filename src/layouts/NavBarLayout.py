@@ -23,10 +23,10 @@ def update_nav_bar(activate_page: str = "Home"):
                             dbc.NavLink(
                                 children=[
                                     html.I(className="bi bi-alarm me-2"),
-                                    html.Span("EDA")
+                                    html.Span("Review")
                                 ],
-                                href="/eda",
-                                active=True if activate_page == "EDA" else False
+                                href="/review",
+                                active=True if activate_page == "Review" else False
                             )
                         ),
                     ],

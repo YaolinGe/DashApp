@@ -6,7 +6,8 @@ Email: geyaolin@gmail.com
 Date: 2024-01-30
 """
 from __future__ import annotations
-from dash import Dash
+from dash import Dash, html, dcc
+import dash_bootstrap_components as dbc
 from dash_bootstrap_components import Container
 
 from layouts.LayoutManager import LayoutManager
@@ -16,12 +17,42 @@ from layouts.NavBarLayout import update_nav_bar
 
 class HomePageLayout:
 
-    def __init__(self) -> None:
-        self._file_uploader_layout = FileUploaderLayout.create()
+    def update_view_port(self) -> Container:
+        return (
+            dbc.Container(
+                [
+                    html.Div(
+                        [
+                            html.Div(
+                                dcc.Loading(
+                                    id="loading-output",
+                                    children=[html.Div(id="output")],
+                                    type="circle",  # You can choose from 'graph', 'cube', 'circle', 'dot', or 'default'
+                                ),
+                                id="upload-div",
+                                style={
+                                    "padding": "10px",
+                                    "border": "thin lightgrey solid",
+                                    "height": "35vh",
+                                    "text-align": "center",
+                                    "margin": "auto",
+                                    "display": "flex",
+                                    "justifyContent": "center",
+                                    "alignItems": "center",
+                                    "backgroundColor": "lightYellow",
+                                    "overflow": "auto"
+                                }
+                            )
+                        ],
+                    ),
+                    FileUploaderLayout.create(),
+                ]
+            )
+        )
 
     def layout(self) -> Container:
         return LayoutManager.update_page_layout(nav_bar_content=update_nav_bar(activate_page="Home"),
-                                                view_port_content=self._file_uploader_layout)
+                                                view_port_content=self.update_view_port())
 
 
 if __name__ == "__main__":
