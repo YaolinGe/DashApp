@@ -5,63 +5,54 @@ import pandas as pd
 import os
 
 from dash import Dash, Output, Input, html, dcc
+import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 
 from controller.paths import datafolder_path
-
-files = [file for file in os.listdir(datafolder_path) if file.endswith(".csv")]
-data_sources = ['Deflection', 'Load', 'Vibration', 'Finish', 'Temperature']
-file_exists = False
-
-if len(files) > 0:
-    file_exists = True
-
-
-def preprocess_and_smooth(df):
-    # Convert Time to total seconds
-    df['Time'] = pd.to_timedelta(df['Time']).dt.total_seconds()
-
-    # Round Time to nearest 0.01 second for synchronization
-    df['Time'] = (df['Time'] * 100).round() / 100
-
-    # Group by Time and average the Values for smoothing
-    df = df.groupby('Time', as_index=False)['Value'].mean()
-
-    return df
+from controller.DataSources import DataSources
+from model.DataHandler import preprocess_and_smooth
 
 
 class ReviewPageCallbackManager:
 
+    def __init__(self):
+        self._file_exists = False
+        self._files = [file for file in os.listdir(datafolder_path) if file.endswith(".csv")]
+
     def register_callbacks(self, app: Dash = None):
 
         @app.callback(
-            Output(component_id='sensor-graph', component_property='children'),
-            Input(component_id='interval-update', component_property='n_intervals'),
+            Output(component_id='review-graph', component_property='children'),
+            Input(component_id='review-interval-update', component_property='n_intervals'),
         )
         def update_figure(n):
-            if not file_exists:
-                return html.Div(
-                    [
-                        html.H1("No data file found! "
-                                "Have you uploaded data files? ")
-                    ],
+            self._files = [file for file in os.listdir(datafolder_path) if file.endswith(".csv")]
+            if self._files:
+                self._file_exists = True
+
+            if self._file_exists:
+                return self.show_sensor_graph(n)
+            else:
+                return dbc.Alert(
+                    "No data file found! Have you uploaded data files?",
+                    color="danger",  # Choose a color that matches the alert context (e.g., "primary", "danger")
                     style={
-                        "padding-top": "2vh",
+                        "fontSize": "20px",  # Larger font size for the title
+                        "margin-top": "20px",  # Add some space between the alert and the content
+                        "width": "100%",
+                        "textAlign": "center"
                     }
                 )
-            else:
-                return self.show_sensor_graph(n)
 
-    @staticmethod
-    def show_sensor_graph(n):
-        fig = make_subplots(rows=5, cols=1, subplot_titles=data_sources, shared_xaxes=True, vertical_spacing=0.05)
-        for i, data_source in enumerate(data_sources, start=1):
-            filename = ReviewPageCallbackManager.get_file_name(data_source)
+    def show_sensor_graph(self, n):
+        fig = make_subplots(rows=5, cols=1, subplot_titles=DataSources, shared_xaxes=True, vertical_spacing=0.05)
+        for i, DataSource in enumerate(DataSources, start=1):
+            filename = self.get_file_name(DataSource)
             if filename:
                 df = pd.read_csv(os.path.join(datafolder_path, filename))
                 df = preprocess_and_smooth(df)
-                fig.add_trace(go.Scatter(x=df["Time"], y=df["Value"], name=data_source, showlegend=False), row=i, col=1)
+                fig.add_trace(go.Scatter(x=df["Time"], y=df["Value"], name=DataSource, showlegend=False), row=i, col=1)
 
         fig.update_layout(
             height=800,
@@ -92,10 +83,9 @@ class ReviewPageCallbackManager:
 
         return dcc.Graph(figure=fig),
 
-    @staticmethod
-    def get_file_name(sensor):
-        for file in files:
-            if sensor.lower() in file.lower():
+    def get_file_name(self, data_source):
+        for file in self._files:
+            if data_source.lower() in file.lower():
                 return file
         return None
 

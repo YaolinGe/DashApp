@@ -5,13 +5,11 @@ Author: Yaolin Ge
 Email: geyaolin@gmail.com
 Date: 2024-01-12
 """
-from controller.CleanUp import clean_up
 from components.AppFactory import create_app
-
-clean_up()
 
 app = create_app(name="OD Turning Data Analysis App")
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, port=2000)
+    # app.run_server(debug=True, port=2000)
+    app.run(debug=True)

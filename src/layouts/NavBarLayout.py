@@ -29,6 +29,16 @@ def update_nav_bar(activate_page: str = "Home"):
                                 active=True if activate_page == "Review" else False
                             )
                         ),
+                        dbc.NavItem(
+                            dbc.NavLink(
+                                children=[
+                                    html.I(className="bi bi-calculator me-2"),
+                                    html.Span("FFT")
+                                ],
+                                href="/fft",
+                                active=True if activate_page == "FFT" else False
+                            )
+                        ),
                     ],
                     vertical="md",
                     pills=True,

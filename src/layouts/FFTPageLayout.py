@@ -6,12 +6,13 @@ Email: geyaolin@gmail.com
 Date: 2024-02-01
 """
 from __future__ import annotations
-from dash import Dash, dcc
+from dash import Dash, dcc, html
 import dash_bootstrap_components as dbc
 from dash_bootstrap_components import Container
 
 from layouts.LayoutManager import LayoutManager
 from layouts.NavBarLayout import update_nav_bar
+from controller.DataSources import DataSources
 
 
 class FFTPageLayout:
@@ -23,13 +24,84 @@ class FFTPageLayout:
                     [
                         dbc.Col(
                             [
-                                dcc.Graph(
-                                    id="sensor-graph",
-                                ),
-                                dcc.Interval(
-                                    id='interval-update',
-                                    interval=60000,  # in milliseconds (e.g., 60000ms = 60s)
-                                    n_intervals=0
+                                html.Div(
+                                    [
+                                        html.Div(
+                                            dcc.RadioItems(
+                                                id='fft-data-source',
+                                                options=[
+                                                    {'label': source, 'value': source} for source in DataSources
+                                                ],
+                                                value='Deflection',
+                                                style={  # Add this style dict
+                                                    'display': 'flex',  # This makes the container a flex container
+                                                    'flexDirection': 'row',
+                                                    # This lays out the children in a horizontal row
+                                                    'gap': '10px',  # Adds space between each radio item
+                                                },
+                                                labelStyle={  # Adjustments to labelStyle for better control
+                                                    'marginRight': '15px',
+                                                    # Adds space to the right of each label, if needed
+                                                }
+                                            ),
+                                            style={
+                                                "padding": "20px",
+                                                "display": "flex",
+                                                "justify-content": "left",
+                                                "align-items": "center",
+                                            }
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div(
+                                                    "Time Slider",
+                                                    style={
+                                                        "padding": "5px",
+                                                        "display": "flex",
+                                                        "justify-content": "center",
+                                                        "font-size": "20px",
+                                                    }
+                                                ),
+                                                dcc.Slider(
+                                                    id='fft-time-slider',
+                                                    min=0,
+                                                    max=99,
+                                                    step=1,
+                                                    value=0,
+                                                    marks={0: '0%', 99: '100%'}
+                                                ),
+                                                html.Div(
+                                                    "Window Size",
+                                                    style={
+                                                        "padding": "5px",
+                                                        "display": "flex",
+                                                        "justify-content": "center",
+                                                        "font-size": "20px",
+                                                    }
+                                                ),
+                                                dbc.Input(
+                                                    id="fft-window-size",
+                                                    type="number",
+                                                    value=200,
+                                                    style={
+
+                                                        "padding": "5px",
+                                                        "display": "flex",
+                                                        "justify-content": "center",
+                                                        "font-size": "20px",
+                                                    }
+                                                )
+                                            ]
+                                        ),
+                                        html.Div(
+                                            id="fft-graph"
+                                        ),
+                                        dcc.Interval(
+                                            id='fft-interval-update',
+                                            interval=60000,  # in milliseconds (e.g., 60000ms = 60s)
+                                            n_intervals=0
+                                        )
+                                    ]
                                 )
                             ],
                             style={
@@ -47,7 +119,7 @@ class FFTPageLayout:
         )
 
     def layout(self) -> Container:
-        return LayoutManager.update_page_layout(update_nav_bar(activate_page="EDA"), self.update_view_port())
+        return LayoutManager.update_page_layout(update_nav_bar(activate_page="FFT"), self.update_view_port())
 
 
 if __name__ == "__main__":

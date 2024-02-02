@@ -22,13 +22,13 @@ class ReviewPageLayout:
                 dbc.Row(
                     [
                         dcc.Interval(
-                            id='interval-update',
+                            id='review-interval-update',
                             interval=60000,  # in milliseconds (e.g., 60000ms = 60s)
                             n_intervals=0
                         ),
                         dbc.Col(
                             children=[
-                                html.Div(id="sensor-graph")
+                                html.Div(id="review-graph")
                             ],
                             style={
                                 "width": "95vw",

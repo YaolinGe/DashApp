@@ -1,5 +1,7 @@
 # Ignore the practice folder
 /practice/
+/architecture/
+/cache/
 
 # Ignore Python byte-compiled files
 __pycache__/
@@ -9,5 +11,3 @@ __pycache__/
 # Example: .log files, .temp files, etc.
 *.log
 *.temp
-
-tools/CutFileParserCLI.exe

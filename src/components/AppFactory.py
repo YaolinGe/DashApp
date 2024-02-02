@@ -8,9 +8,14 @@ import dash_bootstrap_components as dbc
 from callbacks.CutFileParserCallbackManager import CutFileParserCallbackManager
 from callbacks.NavBarCallbackManager import NavBarCallbackManager
 from callbacks.ReviewPageCallbackManager import ReviewPageCallbackManager
+from callbacks.FFTPageCallbackManager import FFTPageCallbackManager
+from controller.CleanUp import clean_up
 
 
 def create_app(name=__name__):
+
+    # clean_up()  # TODO, this needs to be active when deploying the app
+
     external_stylesheets = [
         'https://codepen.io/chriddyp/pen/bWLwgP.css',
         dbc.themes.BOOTSTRAP,
@@ -32,5 +37,8 @@ def create_app(name=__name__):
 
     review_page_callback_manager = ReviewPageCallbackManager()
     review_page_callback_manager.register_callbacks(app=app)
+
+    fft_page_callback_manager = FFTPageCallbackManager()
+    fft_page_callback_manager.register_callbacks(app=app)
 
     return app
