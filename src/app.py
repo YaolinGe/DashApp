@@ -12,4 +12,6 @@ app = create_app(name="OD Turning Data Analysis App")
 
 if __name__ == "__main__":
     # app.run_server(debug=True, port=2000)
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run_server(debug=True, host='0.0.0.0')
+
