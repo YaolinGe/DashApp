@@ -34,7 +34,8 @@ server = app.server
 
 if __name__ == "__main__":
     # Check if the HOST environment variable is set
-    host = os.environ.get('HOST', '127.0.0.1')  # Default to '127.0.0.1' if HOST is not set
+    host = "0.0.0.0"
+    # host = "127.0.0.1"
 
     # You can also specify the port here if needed
     port = 8050  # Replace with your desired port number
