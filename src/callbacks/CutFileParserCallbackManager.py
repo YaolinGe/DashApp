@@ -13,11 +13,15 @@ from dash.long_callback import DiskcacheLongCallbackManager
 import diskcache
 from dash import html
 
+from logging_utils.Logger import Logger
 
 cache = diskcache.Cache("./cache")
 long_callback_manager = DiskcacheLongCallbackManager(cache)
 
 platform_name = platform.system()
+
+# Initialize the logger
+logger = Logger()
 
 
 class CutFileParserCallbackManager:
@@ -54,13 +58,15 @@ class CutFileParserCallbackManager:
         elif platform_name == "Linux":
             exe_path = os.path.join(os.getcwd(), "tools", "linuxParser", "CutFileParserCLI")
         else:
+            logger.log(f"Unsupported platform: {platform_name}", level="error")
             raise Exception("Unsupported platform")
 
         try:
             result = subprocess.run([exe_path, tmp_filename], capture_output=True, text=True, check=True)
         except subprocess.CalledProcessError as e:
-            print("Error occurred:", e)
+            logger.log(f"Error occurred: {e}", level="error")  # Log the error
             return html.Div([html.H5("Error in processing file")])
+
         finally:
             os.remove(tmp_filename)
 
@@ -70,9 +76,11 @@ class CutFileParserCallbackManager:
                          "text-align": "center", "margin": "auto", "display": "flex",
                          "justifyContent": "center", "alignItems": "center",
                          "backgroundColor": "green", "overflow": "auto"}  # Change backgroundColor to green
+            logger.log(f"File processed successfully: {filename}", level="info")
             return html.Div([html.H5(f"Filename: {filename}"), html.Pre("File processed successfully!"),
                              html.Pre(result.stdout if result.stdout else "No output")]), new_style
         except Exception as e:
+            logger.log(f"Error in processing file: {e}", level="error")  # Log the error
             # If an error occurs, keep the original style but change the content
             original_style = {"padding": "10px", "border": "thin lightgrey solid", "height": "35vh",
                               "text-align": "center", "margin": "auto", "display": "flex",

@@ -17,3 +17,4 @@ def clean_up():
                 os.unlink(file_path)
         except Exception as e:
             print(e)
+
