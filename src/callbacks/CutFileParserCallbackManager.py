@@ -5,6 +5,7 @@ import os
 import base64
 import subprocess
 import tempfile
+import platform
 
 from dash import Dash, Output, Input, State
 from dash.exceptions import PreventUpdate
@@ -15,6 +16,8 @@ from dash import html
 
 cache = diskcache.Cache("./cache")
 long_callback_manager = DiskcacheLongCallbackManager(cache)
+
+platform_name = platform.system()
 
 
 class CutFileParserCallbackManager:
@@ -46,7 +49,13 @@ class CutFileParserCallbackManager:
             tmp_file.write(decoded)
             tmp_filename = tmp_file.name
 
-        exe_path = os.path.join(os.getcwd(), "tools", "CutFileParserCLI.exe")
+        if platform_name == "Windows":
+            exe_path = os.path.join(os.getcwd(), "tools", "CutFileParserCLI.exe")
+        elif platform_name == "Linux":
+            exe_path = os.path.join(os.getcwd(), "tools", "linuxParser", "CutFileParserCLI")
+        else:
+            raise Exception("Unsupported platform")
+
         try:
             result = subprocess.run([exe_path, tmp_filename], capture_output=True, text=True, check=True)
         except subprocess.CalledProcessError as e:
