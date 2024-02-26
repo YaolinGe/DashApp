@@ -14,7 +14,7 @@ from controller.CleanUp import clean_up
 
 def create_app(name=__name__):
 
-    clean_up()
+    # clean_up()
 
     external_stylesheets = [
         'https://codepen.io/chriddyp/pen/bWLwgP.css',

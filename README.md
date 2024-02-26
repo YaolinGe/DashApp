@@ -19,6 +19,9 @@ Vibration
 Temperature
 ```
 
+## How to set up Docker to deploy the app in the container
+- host needs to use `0.0.0.0` for the cloud setup, but it needs to be updated when launching in the local machine.
+
 ## Overview
 This application, built using Dash in Python, visualizes data from `.cut` files processed by the `CutFileParserCLI` tool. It offers interactive data visualization capabilities, enabling users to explore and analyze the extracted data efficiently.
 

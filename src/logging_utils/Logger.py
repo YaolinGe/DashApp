@@ -1,6 +1,4 @@
 import logging
-import os
-
 from controller.paths import log_path
 
 
@@ -30,3 +28,17 @@ class Logger:
             self.logger.error(message)
         elif level == "critical":
             self.logger.critical(message)
+
+    def update_logging_level(self, level):
+        if level == "info":
+            self.logger.setLevel(logging.INFO)
+        elif level == "debug":
+            self.logger.setLevel(logging.DEBUG)
+        elif level == "warning":
+            self.logger.setLevel(logging.WARNING)
+        elif level == "error":
+            self.logger.setLevel(logging.ERROR)
+        elif level == "critical":
+            self.logger.setLevel(logging.CRITICAL)
+        else:
+            self.logger.setLevel(logging.INFO)

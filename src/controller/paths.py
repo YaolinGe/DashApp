@@ -10,5 +10,5 @@ working_directory = os.getcwd()
 logfolder_path = os.path.join(working_directory, "logs")
 os.makedirs(logfolder_path, exist_ok=True)
 log_path = os.path.join(logfolder_path, "DashApp.log")
-if os.path.exists(log_path):
-    os.remove(log_path)
+# if os.path.exists(log_path):
+#     os.remove(log_path)

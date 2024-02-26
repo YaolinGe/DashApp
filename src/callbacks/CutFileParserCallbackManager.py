@@ -22,6 +22,7 @@ platform_name = platform.system()
 
 # Initialize the logger
 logger = Logger()
+logger.update_logging_level("debug")
 
 
 class CutFileParserCallbackManager:
