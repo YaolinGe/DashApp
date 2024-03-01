@@ -32,7 +32,7 @@ class FFTPageLayout:
                                                 options=[
                                                     {'label': source, 'value': source} for source in DataSources
                                                 ],
-                                                value='Deflection',
+                                                # value='Deflection',
                                                 style={  # Add this style dict
                                                     'display': 'flex',  # This makes the container a flex container
                                                     'flexDirection': 'row',
@@ -82,7 +82,7 @@ class FFTPageLayout:
                                                 dbc.Input(
                                                     id="fft-window-size",
                                                     type="number",
-                                                    value=200,
+                                                    value=1600,
                                                     style={
 
                                                         "padding": "5px",

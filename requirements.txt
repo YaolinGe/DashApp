@@ -6,3 +6,4 @@ multiprocess
 diskcache
 dash[diskcache]
 pandas
+matplotlib

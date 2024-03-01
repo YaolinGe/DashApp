@@ -4,6 +4,7 @@ This module handles the data analysis related callbacks
 import pandas as pd
 import os
 import numpy as np
+from scipy.fft import fft
 
 from dash import Dash, Output, Input, html, dcc
 import dash_bootstrap_components as dbc
@@ -12,7 +13,9 @@ from plotly.subplots import make_subplots
 
 from controller.paths import datafolder_path
 from controller.DataSources import DataSources
-from model.DataHandler import preprocess_and_smooth
+from model.DataHandler import resample_timestamp
+
+import matplotlib.pyplot as plt
 
 
 class FFTPageCallbackManager:
@@ -57,36 +60,45 @@ class FFTPageCallbackManager:
             vertical_spacing=0.1,
             subplot_titles=(f"{data_source} Time Series", "Selected Time Window", "FFT Analysis")
         )
-
-        filename = self.get_file_name(data_source)
+        if not data_source:
+            return dcc.Graph()  ## -> Need a better solution here.
+        else:
+            filename = self.get_file_name(data_source)
         if filename:
+            # Process the data to match the desired time format and value format
             df = pd.read_csv(os.path.join(datafolder_path, filename))
-            df = preprocess_and_smooth(df)
-            ind_current_timestamp = int(df.shape[0] * time_slider / 100)
+            df = resample_timestamp(df).to_numpy()
+            xplot = df[:, 0]
+            yplot = df[:, 1]
+            number_of_samples = len(xplot)
+            sampling_interval = np.mean(np.diff(xplot))
+            sampling_rate = 1 // sampling_interval
+
+            ind_current_timestamp = int(number_of_samples * time_slider / 100)
             window_half_length = int(window_size / 2)
             ind_window_start = max(0, ind_current_timestamp - window_half_length)
             ind_window_end = min(df.shape[0]-1, ind_current_timestamp + window_half_length)
 
             # Plotting the main sensor data on the first row
-            fig.add_trace(go.Scatter(x=df["Time"], y=df["Value"], name=data_source, showlegend=False), row=1, col=1)
-            fig.add_vline(x=df["Time"].iloc[ind_current_timestamp], line_width=1, line_dash="dash", line_color="red",
+            fig.add_trace(go.Scatter(x=xplot, y=yplot, name=data_source, showlegend=False), row=1, col=1)
+            fig.add_vline(x=xplot[ind_current_timestamp], line_width=1, line_dash="dash", line_color="red",
                           row=1, col=1)
-            fig.add_vrect(x0=df["Time"].iloc[ind_window_start], x1=df["Time"].iloc[ind_window_end],
+            fig.add_vrect(x0=xplot[ind_window_start], x1=xplot[ind_window_end],
                           fillcolor="lightyellow", opacity=0.5, line_width=0, row=1, col=1)
 
-            xplot_selected_time_window = df["Time"].iloc[ind_window_start:ind_window_end]
-            yplot_selected_time_window = df["Value"].iloc[ind_window_start:ind_window_end]
+            xplot_selected_time_window = xplot[ind_window_start:ind_window_end]
+            yplot_selected_time_window = yplot[ind_window_start:ind_window_end]
             fig.add_trace(go.Scatter(x=xplot_selected_time_window, y=yplot_selected_time_window,
                                      name="Selected Time Window", showlegend=False),row=2, col=1)
 
             # Plot FFT analysis
-            signal = yplot_selected_time_window
-            sampling_interval = np.mean(np.diff(xplot_selected_time_window))
-            sampling_rate = 1 / sampling_interval
-            f_signal = np.fft.fft(signal)
-            xf_signal = np.fft.fftfreq(len(signal), sampling_interval)
-            df_fft = pd.DataFrame({"Frequency": np.abs(xf_signal), "Amplitude": np.abs(f_signal)})
-            df_fft = df_fft[df_fft["Frequency"] > 0]
+            signal = yplot_selected_time_window - np.mean(yplot_selected_time_window)
+            number_of_samples_in_window = len(signal)
+            half_number_of_samples = number_of_samples_in_window // 2
+            f_signal = fft(signal)
+            xf_signal = np.linspace(0, sampling_rate, number_of_samples_in_window)
+            df_fft = pd.DataFrame({"Frequency": xf_signal[:half_number_of_samples],
+                                   "Amplitude": np.abs(f_signal)[:half_number_of_samples]/number_of_samples_in_window})
             fig.add_trace(go.Scatter(x=df_fft["Frequency"], y=df_fft["Amplitude"],
                                      name="FFT Analysis", showlegend=False), row=2, col=2)
 
@@ -95,6 +107,10 @@ class FFTPageCallbackManager:
             height=600,
             title_text=f"Analysis of {data_source} Data",
             hovermode='x unified',
+            updatemenus=[dict(type="buttons",
+                              buttons=[dict(label="Play",
+                                            method="animate",
+                                            args=[None])])],
         )
 
         # Updating axis labels and configurations
@@ -108,6 +124,7 @@ class FFTPageCallbackManager:
         return dcc.Graph(figure=fig),
 
     def get_file_name(self, data_source):
+
         for file in self._files:
             if data_source.lower() in file.lower():
                 return file

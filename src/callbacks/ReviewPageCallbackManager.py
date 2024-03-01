@@ -11,7 +11,7 @@ from plotly.subplots import make_subplots
 
 from controller.paths import datafolder_path
 from controller.DataSources import DataSources
-from model.DataHandler import preprocess_and_smooth
+from model.DataHandler import preprocess_and_smooth, resample_timestamp
 
 
 class ReviewPageCallbackManager:
@@ -51,12 +51,13 @@ class ReviewPageCallbackManager:
             filename = self.get_file_name(DataSource)
             if filename:
                 df = pd.read_csv(os.path.join(datafolder_path, filename))
-                df = preprocess_and_smooth(df)
+                df = resample_timestamp(df)
+                # df = preprocess_and_smooth(df)
                 fig.add_trace(go.Scatter(x=df["Time"], y=df["Value"], name=DataSource, showlegend=False), row=i, col=1)
 
         fig.update_layout(
             height=800,
-            title_text="Synchronized Sensor Data at 0.01s Intervals",
+            title_text="Synchronized Sensor Data",
             hovermode='x unified',  # Unified hover mode across all plots
             xaxis=dict(
                 showspikes=True,  # Show spike lines for the x-axis
